@@ -1,7 +1,7 @@
 // http.js
 import axios, { AxiosInstance, AxiosError } from "axios";
 
-export const baseApiUrl = "http://127.0.0.1:5000";
+export const baseApiUrl = "https://rotaract-wbx6.onrender.com";
 
 let userToken;
 if (import.meta.client) {
