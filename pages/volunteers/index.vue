@@ -116,7 +116,7 @@ const openVolunteerDelete = (data: Volunteer) => {
 };
 onMounted(async () => {
 
-    if (authStore.getUserRole !== 'admin') {
+    if (!authStore.getUserRole) {
         return navigateTo('/')
 
     }

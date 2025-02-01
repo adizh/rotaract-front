@@ -2,7 +2,7 @@
     <div>
         <div v-if="!authStore.getIsLeader">
             <h1 class="mb-2">Статистика</h1>
-            <div class="flex align-items-start gap-5 mb-6">
+            <div class="flex flex-column gap-1 mb-6">
                 <div class="circle-chart-block">
                     <Chart type="pie" :data="chartData" :options="chartOptions" class="w-full md:w-[30rem]" />
                 </div>
@@ -31,6 +31,7 @@
 
 
                 <div class="circle-chart-block">
+
                     <Chart type="pie" :data="leaderChart" :options="leaderChartOptions" class="w-full md:w-[30rem]" />
                 </div>
 
@@ -41,13 +42,13 @@
 
 
 
-            <div class="w-full mt-5 mb-6">
+            <div class="w-full mt-5 mb-6 flex">
 
                 <h2>Прогресс команд</h2>
-                <MainTeamProgress :group-name="authStore.getLeader.groupName"
+                <MainTeamProgress :group-name="teamsStore.getTeam.groupName"
     type="leader"
-                    :project-name="authStore.getLeader.projectName" :status="authStore.getLeader.status"
-                    :team-leader-name="authStore.getLeader.firstName" @selectStatus="selectStatus" />
+                    :project-name="teamsStore.getTeam?.projectName" :status="teamsStore.getTeam.status"
+                    :team-leader-name="teamsStore.getTeam?.teamLeader?.teamLeaderName" @selectStatus="selectStatus" />
 
 
 
