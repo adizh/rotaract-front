@@ -1,7 +1,9 @@
 <template>
     <div>
         <Button label="Добавить команду" @click="isCreateTeamOpen = !isCreateTeamOpen" />
-        <DataTable v-model:expandedRows="expandedRows" :value="store.getTeams" dataKey="groupId"
+        <DataTable
+        v-if="!store.getTeamsLoading"
+        v-model:expandedRows="expandedRows" :value="store.getTeams" dataKey="groupId"
             tableStyle="min-width: 60rem">
 
             <template #header>
@@ -10,6 +12,8 @@
             <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" /> -->
                 </div>
             </template>
+
+            <template #empty>Нет данных</template>
             <Column expander style="width: 5rem" />
             <Column field="groupName" header="Название"></Column>
             <Column field="projectName" header="Проект"></Column>
@@ -67,6 +71,12 @@
                 </div>
             </template>
         </DataTable>
+        
+
+        <div v-else class="centered-block">
+
+            <ProgressSpinner/>
+        </div>
     </div>
 
     <Dialog v-model:visible="isCreateTeamOpen" modal header="Создать команду" :style="{ width: '35rem' }">

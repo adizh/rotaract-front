@@ -1,10 +1,10 @@
 <template>
-    <div class=" team-progress">
+    <div class="team-progress">
        
         <div>
             <div class='card team-block'>
 
-                <p class=" mt-3">Команда: <strong>{{ groupName }}</strong></p>
+                <p class="mt-3">Команда: <strong>{{ groupName }}</strong></p>
                 <p class="mt-1 mb-1">Куратор: <strong>{{ teamLeaderName }}</strong></p>
                 <p class="mb-1">Проект: <strong>{{ projectName }}</strong></p>
                 <div class="flex gap-2 w-40rem align-items-center mt-2 mb-2">

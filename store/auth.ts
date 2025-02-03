@@ -8,13 +8,14 @@ export const useAuthStore = defineStore("authStore", {
   
   actions: {
     logout() {
-      localStorage.removeItem("access_Token");
-      localStorage.removeItem("refresh_Token");
-     // localStorage.removeItem("role");
+      localStorage.removeItem("groupId");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+     localStorage.removeItem("role");
 
       setTimeout(() => {
         window.location.reload();
-      }, 300);
+      }, 500);
       return navigateTo("/auth");
     },
 

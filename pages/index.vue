@@ -1,61 +1,73 @@
 <template>
     <div>
         <div v-if="!authStore.getIsLeader">
-            <h1 class="mb-2">Статистика</h1>
-            <div class="flex flex-column gap-1 mb-6">
-                <div class="circle-chart-block">
-                    <Chart type="pie" :data="chartData" :options="chartOptions" class="w-full md:w-[30rem]" />
+
+            <div v-if="!teamsStore.getTeamsLoading">
+                <h1 class="mb-2">Статистика</h1>
+                <div class="flex gap-1 mb-6">
+                    <div class="circle-chart-block">
+                        <Chart
+                        v-if="teamsStore.getTeams"
+                        type="pie" :data="chartData" :options="chartOptions" class="w-full md:w-[30rem]" />
+                    </div>
+                    <div class="mt-8">
+                        Общее кол-во волонтеров: <strong>{{ totalLenVolunteers() }}</strong>
+                    </div>
                 </div>
-                <div class="mt-8">
-                    Общее кол-во волонтеров: <strong>{{ totalLenVolunteers() }}</strong>
+
+                <h2 class="mb-2">Прогресс команд</h2>
+                <div v-for="team in teamsStore.getTeams" :key="team.groupId">
+
+                    <MainTeamProgress :group-name="team.groupName" :project-name="team.projectName"
+                        :status="team.status" :team-leader-name="team.teamLeader.teamLeaderName"
+                        @selectStatus="selectStatus" type="admin" />
+
+
                 </div>
             </div>
-            <h2>Прогресс команд</h2>
-<div  v-for="team in teamsStore.getTeams" :key="team.groupId">
 
-    <MainTeamProgress :group-name="team.groupName"
-
-    :project-name="team.projectName" :status="team.status"
-    :team-leader-name="team.teamLeader.teamLeaderName" @selectStatus="selectStatus"
-    type="admin"
-    />
-
-</div>
-            <!-- <MainTeamProgress /> -->
+            <div v-else class="centered-block">
+                <ProgressSpinner />
+            </div>
         </div>
 
         <div v-else>
+            <div v-if="!teamsStore.getTeamLoading">
+
+                <div class="flex flex-row align-items-start gap-3">
 
 
-            <div class="flex flex-row align-items-start gap-5">
+                    <div class="circle-chart-block">
 
+                        <Chart type="pie" :data="leaderChart" :options="leaderChartOptions"
+                            class="w-full md:w-[30rem]" />
+                    </div>
 
-                <div class="circle-chart-block">
-
-                    <Chart type="pie" :data="leaderChart" :options="leaderChartOptions" class="w-full md:w-[30rem]" />
+                    <div class="mt-8">
+                        Общее кол-во волонтеров: <strong>{{ leaderTotalLen() }}</strong>
+                    </div>
                 </div>
 
-                <div class="mt-8">
-                    Общее кол-во волонтеров: <strong>{{ leaderTotalLen() }}</strong>
+
+
+                <div class="w-full mt-3 mb-6 flex flex-column">
+
+                    <h2 class="mt-4">Прогресс команд</h2>
+                    <MainTeamProgress :group-name="teamsStore.getTeam.groupName" type="leader"
+                        :project-name="teamsStore.getTeam?.projectName" :status="teamsStore.getTeam.status"
+                        :team-leader-name="teamsStore.getTeam?.teamLeader?.teamLeaderName"
+                        @selectStatus="selectStatus" />
+
+
+
+
+
                 </div>
             </div>
 
-
-
-            <div class="w-full mt-5 mb-6 flex">
-
-                <h2>Прогресс команд</h2>
-                <MainTeamProgress :group-name="teamsStore.getTeam.groupName"
-    type="leader"
-                    :project-name="teamsStore.getTeam?.projectName" :status="teamsStore.getTeam.status"
-                    :team-leader-name="teamsStore.getTeam?.teamLeader?.teamLeaderName" @selectStatus="selectStatus" />
-
-
-
-
-
+            <div v-else class="centered-block">
+                <ProgressSpinner />
             </div>
-
         </div>
         <ConfirmDialog></ConfirmDialog>
 
@@ -77,18 +89,19 @@ const authStore = useAuthStore()
 
 const teamsStore = useTeamsStore()
 const setChartData = () => {
-    
+    console.log('teamsStore in set chartOptions', teamsStore.getTeams)
+
     const documentStyle = getComputedStyle(document.body);
 
 
 
-    const labels = teamsStore.getTeams.map((team: Team) => team.groupName);
+    const labels = teamsStore.getTeams.map((team: Team) => team?.groupName);
     const data = teamsStore.getTeams.map((team: Team) => team?.volunteers?.length || 0);
     const backgroundColor = teamsStore.getTeams.map((_, index) => {
         const colors = ['--p-cyan-500', '--p-orange-500', '--p-gray-500'];
         return documentStyle?.getPropertyValue(colors[index % colors.length]);
     });
-    const hoverBackgroundColor = teamsStore.getTeams.map((_, index) => {
+    const hoverBackgroundColor = teamsStore?.getTeams?.map((_, index) => {
         const hoverColors = ['--p-cyan-400', '--p-orange-400', '--p-gray-400'];
         return documentStyle?.getPropertyValue(hoverColors[index % hoverColors.length]);
     });
@@ -188,7 +201,7 @@ const updateStep = (step: string) => {
             label: 'Потвердить'
         },
         accept: () => {
-            console.log('accpr',authStore.getLeader)
+            console.log('accpr', authStore.getLeader)
             if (authStore.getLeader.groupId) {
                 teamsStore.fetchUpdateTeamStatus(authStore.getLeader.groupId, step)
             }
@@ -215,7 +228,7 @@ const createUser = async () => {
         console.log(err)
     }
 }
-const voluntStore=useVolunteerStore()
+const voluntStore = useVolunteerStore()
 onMounted(async () => {
     if (!authStore.getUserFromStorage) {
         return navigateTo('/auth')
@@ -226,6 +239,7 @@ onMounted(async () => {
     if (!authStore.getIsLeader) {
         await teamsStore.fetchAllteams()
         chartData.value = setChartData();
+        console.log('chartData',chartData)
         chartOptions.value = setChartOptions();
         await voluntStore.fetchAllVolunteers()
     } else {
@@ -233,8 +247,6 @@ onMounted(async () => {
         await tasksStore.fetchTasksByGroupId(authStore.getGroupId as string)
         leaderChart.value = setLeaderChartData();
         leaderChartOptions.value = setLeaderChartOptions();
-
-        console.log('leaderChart', leaderChart)
     }
 })
 

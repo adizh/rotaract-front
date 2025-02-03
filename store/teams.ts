@@ -4,11 +4,17 @@ import {isCreateTeamOpen, openTeamUpdate} from '@/pages/teams/teams'
 export const useTeamsStore = defineStore("teamsStore", {
     state: () => ({
         teams: [] as Team[],
-        team:{} as Team
+        team: {} as Team,
+
+        loading: {
+            team: false,
+            teams:false
+        }
     }),
   
     actions: {
-       async  fetchAllteams () {
+        async fetchAllteams() {
+            this.loading.teams=true
       try {
           const response = await http('/teams/get-all-teams')
           console.log('response get all teams', response)
@@ -19,6 +25,8 @@ export const useTeamsStore = defineStore("teamsStore", {
                 
             } catch (err) {
                 console.log(err)
+            }finally{
+                this.loading.teams=false
             }
         },
         async createTeam(body:any) {
@@ -48,6 +56,7 @@ export const useTeamsStore = defineStore("teamsStore", {
             }
         },
         async fetchTeamId(teamId: string) {
+            this.loading.team=true
             try {
                 const response = await http(`/teams/team/${teamId}`)
                 console.log('response get team id', response)
@@ -57,6 +66,8 @@ export const useTeamsStore = defineStore("teamsStore", {
                 
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading.team=false
             }
         },
         async fetchUpdateTeamStatus(teamId: string, status: string) {
@@ -76,11 +87,18 @@ export const useTeamsStore = defineStore("teamsStore", {
     },
     getters: {
         getTeams(state) {
+
             return state.teams
         },
         getTeam(state) {
             return state.team
-        }
+        },
+        getTeamLoading(state) {
+            return state.loading.team
+        },
+        getTeamsLoading(state) {
+            return state.loading.teams
+        },
     }
 
 })

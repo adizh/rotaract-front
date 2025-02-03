@@ -4,13 +4,10 @@
             <li :class="{ 'active-link': route.path == '/' }" @click="navigateTo('/')">Главная</li>
             <li :class="{ 'active-link': route.path == '/volunteers' }" @click="navigateTo('/volunteers')">Волонтеры
             </li>
-            <li
-          v-if="!authStore.getIsLeader"
-            :class="{ 'active-link': route.path == '/teams' }" @click="navigateTo('/teams')">Команды</li>
+            <li v-if="!authStore.getIsLeader" :class="{ 'active-link': route.path == '/teams' }"
+                @click="navigateTo('/teams')">Команды</li>
 
-            <li
-          
-            :class="{ 'active-link': route.path == '/meetings' }" @click="navigateTo('/meetings')">Встречи</li>
+            <li :class="{ 'active-link': route.path == '/meetings' }" @click="navigateTo('/meetings')">Встречи</li>
         </ul>
 
 
@@ -21,10 +18,14 @@
 
         </p>
 
-        <Dialog v-model:visible="isLogoutOpen" modal header="Выход" :style="{ width: '35rem' }">
+        <Dialog v-model:visible="isLogoutOpen" modal header="Выход" :style="{ width: '25rem' }">
+            <p class="text-center">Вы действительно хотите выйти?</p>
 
+            <div class="flex justify-content-center gap-2 align-items-center mt-4">
+                <Button @click="isLogoutOpen=false" label="Отмена" severity="contrast" />
+                <Button @click="authStore.logout()" label="Выйти" severity="danger" />
+            </div>
 
-            dfd
         </Dialog>
     </div>
 </template>
@@ -34,12 +35,12 @@ import { useAuthStore } from '~/store/auth';
 
 const activeLink = ref('/')
 const route = useRoute()
-const isLogoutOpen=ref(false)
+const isLogoutOpen = ref(false)
 const confirm = useConfirm();
 const openLogout = () => {
-    isLogoutOpen.value=true
+    isLogoutOpen.value = true
 };
-const authStore=useAuthStore()
+const authStore = useAuthStore()
 
 
 console.log('route', route)
@@ -63,8 +64,8 @@ console.log('route', route)
 
 .extra-methods {
     margin: 300px auto 0 30px;
-width: 100%;
-display: flex;
+    width: 100%;
+    display: flex;
 
 }
 

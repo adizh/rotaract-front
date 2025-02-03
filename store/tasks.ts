@@ -6,13 +6,18 @@ import { Task } from '~/types/Tasks'
 export const useTasksStore = defineStore("tasksStore", {
     state: () => ({
         allTasks: [] as Task[],
-        tasksByGroup:[] as Task[]
+        tasksByGroup: [] as Task[],
+        loading: {
+            tasks: false,
+            tasksByGroup:false
+        }
 
     }),
   
     actions: {
        
-        async fetchTasksByGroupId(groupId:string) {
+        async fetchTasksByGroupId(groupId: string) {
+            this.loading.tasksByGroup= true
             try {
                 const response = await http(`/tasks/get-tasks-by-group/${groupId}`)
                 console.log('response fetch tasks by groupId', response)
@@ -22,10 +27,13 @@ export const useTasksStore = defineStore("tasksStore", {
                 
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading.tasksByGroup= false
             }
     },
         
-    async fetchAllTasks() {
+        async fetchAllTasks() {
+            this.loading.tasks= true
         try {
             const response = await http('/tasks/get-all-tasks')
             console.log('response fetch tasks', response)
@@ -35,7 +43,7 @@ export const useTasksStore = defineStore("tasksStore", {
             
         } catch (err) {
             console.log(err)
-        }
+        }finally{   this.loading.tasks= false}
     },
         async createTask(body: any) {
             try {
@@ -83,6 +91,12 @@ export const useTasksStore = defineStore("tasksStore", {
     getters: {
         getTasksByGroup(state) {
             return state.tasksByGroup
+        },
+        getTasksLoading(state) {
+            return state.loading.tasks
+        },
+        getTasksByGroupLoading(state) {
+            return state.loading.tasksByGroup
         }
     }
 

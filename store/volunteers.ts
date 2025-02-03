@@ -8,7 +8,11 @@ export const useVolunteerStore = defineStore("volunteerStore", {
     state: () => ({
         volunteer: {} as Volunteer,
         volunteers: [] as Volunteer[],
-        volunteersByGroup:[] as Volunteer[]
+        volunteersByGroup: [] as Volunteer[],
+        loading: {
+            volunteers: false,
+            volunteersByGroup:false
+        }
     }),
   
     actions: {
@@ -27,7 +31,8 @@ export const useVolunteerStore = defineStore("volunteerStore", {
                 console.log(err)
       }   
         },
-        async  fetchAllVolunteers() {
+        async fetchAllVolunteers() {
+            this.loading.volunteers=true
             try {
                 const response = await http(`/volunteers/get-all`)
 
@@ -40,7 +45,9 @@ export const useVolunteerStore = defineStore("volunteerStore", {
           
             } catch (err) {
                 console.log(err)
-      }   
+            } finally {
+                this.loading.volunteers=false
+      }
         },
 
         async deleteVolunteer(volunteerId: string) {
@@ -95,6 +102,7 @@ export const useVolunteerStore = defineStore("volunteerStore", {
             
         },
         async fetchVolunteersByGroupId(groupId: string) {
+            this.loading.volunteersByGroup=true
             try {
                 const response = await http(`/volunteers/get-all-volunteers-by-group-id/${groupId}`)
                 console.log('response fetch volunteer by group id',response)
@@ -106,6 +114,8 @@ this.volunteersByGroup=response.data
                 }
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading.volunteersByGroup=false
             }
             
         }
@@ -122,6 +132,12 @@ this.volunteersByGroup=response.data
         },
         getVolunteersByGroup(state) {
             return state.volunteersByGroup
+        },
+        getVolunteersLoading(state) {
+            return state.loading.volunteers
+        },
+        getVolunteersByGroupLoading(state) {
+            return state.loading.volunteersByGroup
         }
     }
 })

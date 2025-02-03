@@ -5,11 +5,16 @@ export const useMeetingsStore = defineStore("meetingsStore", {
     state: () => ({
         allMeetings: [] as AllMeetings[],
         meetingsByGroupId: [],
+        loading: {
+            allMeetings: false,
+            meetingsByGroupId:false
+        }
     
     }),
     actions: {
         
         async fetchMeetingsByGroupId(groupId: string) {
+            this.loading.meetingsByGroupId=true
             try {
                 const response = await http.get(`/meetings/fetch-all-meetings-groupId/${groupId}`)
                 console.log('response fetch meetings gropId',response)
@@ -19,9 +24,12 @@ export const useMeetingsStore = defineStore("meetingsStore", {
                 
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading.meetingsByGroupId=false
             }
         },
         async fetchAllMeetings() {
+            this.loading.allMeetings=true
             try {
                 const response = await http.get('/meetings/fetch-all-meetings')
                 console.log('response',response)
@@ -32,6 +40,8 @@ export const useMeetingsStore = defineStore("meetingsStore", {
                 
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading.allMeetings=false
             }
         },
         async deleteMeetingById(meetingId:string) {
@@ -66,6 +76,12 @@ export const useMeetingsStore = defineStore("meetingsStore", {
         },
         getAllMeetings(state) {
             return state.allMeetings
+        },
+        getMeetingsLoading(state) {
+            return state.loading.allMeetings
+        },
+        getMeetingsByGroupLoading(state) {
+            return state.loading.meetingsByGroupId
         }
     }
 })

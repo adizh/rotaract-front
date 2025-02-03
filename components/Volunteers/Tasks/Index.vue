@@ -6,7 +6,7 @@
         </div>
 
 
-        <div>
+        <div v-if="!tasksStore.getTasksByGroupLoading">
             <DataTable :value="tasksStore.getTasksByGroup" dataKey="id" tableStyle="min-width: 60rem"
                 v-model:expandedRows="expandedRows">
                 <template #header>
@@ -69,6 +69,9 @@
 
 
 
+        </div>
+        <div v-else class="centered-block">
+            <ProgressSpinner />
         </div>
 
         <Dialog v-model:visible="openCreateTask" modal header="Создать задание" :style="{ width: '35rem' }">

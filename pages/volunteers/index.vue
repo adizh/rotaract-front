@@ -1,18 +1,29 @@
 <template>
-    <div>
-        <div class="flex justify-content-between">
+    <div class="volunteers-section">
+        <div class="flex justify-content-between mb-5">
             <h3 class="mb-3" v-if="authStore.getIsLeader">Волонтеры команды {{ authStore.getLeader.groupName }}</h3>
             <Button label="Создать волонтера" @click="toggleCreateVolunteer(true)" />
         </div>
-        <DataTable :value="volunteersTable" dataKey="id" tableStyle="min-width: 60rem">
+        <DataTable v-if="!voluntStore.getVolunteersByGroupLoading && !voluntStore.getVolunteersLoading"
+            :value="volunteersTable" dataKey="id" tableStyle="min-width: 60rem"
+            
+             v-model:filters="filters"  paginator :rows="perPage" filterDisplay="row" :loading="voluntStore.getVolunteersByGroupLoading ||voluntStore.getVolunteersLoading "
+                :globalFilterFields="['firstName', 'lastName']"
+            >
 
 
             <template #header>
-                <div class="flex flex-wrap justify-end gap-2">
-                    <!-- <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
-        <Button text icon="pi pi-minus" label="Collapse All" @click="collapseAll" /> -->
+                <div class="flex justify-end w-full">
+                    <IconField class="w-full">
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText
+                        class="w-full" v-model="filters['global'].value" placeholder="Поиск по ФИО" />
+                    </IconField>
                 </div>
             </template>
+            <template #empty> Нет данных </template>
             <Column field="firstName" header="Имя"></Column>
             <Column field="lastName" header="Фамилия"></Column>
             <Column field="age" header="Возраст"></Column>
@@ -52,18 +63,32 @@
                     </div>
                 </template>
             </Column>
+<template #footer>
+    <div class="flex align-items-center justify-content-between">
 
+        <p>Общее кол-во волонтеров: {{ voluntStore.getAllVolunteers?.length }}</p>
+
+        <Button v-if="!areAllOpen" class="info" icon="pi pi-plus" @click="showAllData(true)" rounded v-tooltip.top="'Показать все'"/>
+        <Button v-else class="info" icon="pi pi-minus" @click="showAllData(false)" rounded v-tooltip.top="'Закрыть все'"/>
+    </div>
+</template>
 
         </DataTable>
 
 
 
-
+        <div v-else class="centered-block">
+            <ProgressSpinner />
+        </div>
 
 
 
 
         <VolunteersTasks v-if="authStore.getIsLeader" />
+
+
+        
+
 
         <ConfirmDialog></ConfirmDialog>
 
@@ -84,8 +109,28 @@ import { useVolunteerStore } from '~/store/volunteers';
 import { Volunteer } from '~/types/Volunteers';
 import { toggleUpdateVolunteer, isUpdateVolunteerOpen, currentVolunteer, toggleCreateVolunteer, isCreateVolunteerOpen } from './volunteers'
 import { useAuthStore } from '~/store/auth';
+import { useTasksStore } from '~/store/tasks';
+import { FilterMatchMode } from '@primevue/core/api';
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    firstName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    lastName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+ 
+});
+const areAllOpen =ref(false)
+const perPage=ref(5)
 
+const showAllData = (data: boolean) => {
+    areAllOpen.value = data
+    if (data) {
+        perPage.value = voluntStore.getAllVolunteers?.length    
+    } else {
+        perPage.value = 5
+    }
+    
+}
 const confirm = useConfirm()
+const tasksStore = useTasksStore()
 const voluntStore = useVolunteerStore();
 const volunteersTable = computed(() => {
     return authStore.getIsLeader ? voluntStore.getVolunteersByGroup : voluntStore.getAllVolunteers
@@ -134,4 +179,10 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.volunteers-section{
+    padding-bottom: 90px;
+}
+
+
+</style>
