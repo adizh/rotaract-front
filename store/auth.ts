@@ -36,9 +36,9 @@ export const useAuthStore = defineStore("authStore", {
             }
             navigateTo('/')
   
-              // setTimeout(() => {
-              //     window.location.reload()
-              // }, 400)
+              setTimeout(() => {
+                  window.location.reload()
+              }, 400)
           }
   
       } catch (err: any) {
