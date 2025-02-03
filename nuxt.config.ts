@@ -28,6 +28,11 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module','@pinia/nuxt'
   ],
   vite: {
+    server: {
+      // hmr: {
+      //   overlay: false,
+      // },
+    },
     css: {
       preprocessorOptions: {
         scss: {

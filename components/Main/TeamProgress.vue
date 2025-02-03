@@ -22,9 +22,6 @@
                     <StepList>
                         <Step v-for="item in statusOptions" :key="item.label" :disabled="true" :value="item.value">{{
                             item.label }}</Step>
-
-
-
                     </StepList>
 
                 </Stepper>

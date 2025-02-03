@@ -9,6 +9,7 @@
         <Button icon="pi pi-bars" severity="contrast" @click="authStore.toggleSidebar(true)"
           v-if="!authStore.getSidebarOpen"></Button>
         <Button icon="pi pi-bars" severity="contrast" v-else></Button>
+        
       </div>
       <NuxtPage />
     </div>

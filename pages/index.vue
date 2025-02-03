@@ -4,7 +4,7 @@
 
             <div v-if="!teamsStore.getTeamsLoading">
                 <h1 class="mb-2">Статистика</h1>
-                <div class="flex gap-1 mb-6">
+                <div class="flex gap-1 mb-6 analitics-block">
                     <div class="circle-chart-block">
                         <Chart
                         v-if="teamsStore.getTeams"
@@ -34,7 +34,7 @@
         <div v-else>
             <div v-if="!teamsStore.getTeamLoading">
 
-                <div class="flex flex-row align-items-start gap-3">
+                <div class="flex flex-row align-items-start gap-3 analitics-block">
 
 
                     <div class="circle-chart-block">
@@ -257,4 +257,13 @@ onMounted(async () => {
 .circle-chart-block {
     width: 300px;
 }
+
+@media (max-width:760px) and (min-width:320px){
+    .analitics-block{
+        flex-direction: column;
+        justify-content: start;
+    }
+}
+
+
 </style>

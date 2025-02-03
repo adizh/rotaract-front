@@ -3,13 +3,13 @@
 
     <div class="sidebar mt-2">
         <ul>
-            <li :class="{ 'active-link': route.path == '/' }" @click="navigateTo('/')">Главная</li>
-            <li :class="{ 'active-link': route.path == '/volunteers' }" @click="navigateTo('/volunteers')">Волонтеры
+            <li :class="{ 'active-link': route.path == '/' }" @click="linkTo('/')">Главная</li>
+            <li :class="{ 'active-link': route.path == '/volunteers' }" @click="linkTo('/volunteers')">Волонтеры
             </li>
             <li v-if="!authStore.getIsLeader" :class="{ 'active-link': route.path == '/teams' }"
-                @click="navigateTo('/teams')">Команды</li>
+                @click="linkTo('/teams')">Команды</li>
 
-            <li :class="{ 'active-link': route.path == '/meetings' }" @click="navigateTo('/meetings')">Встречи</li>
+            <li :class="{ 'active-link': route.path == '/meetings' }" @click="linkTo('/meetings')">Встречи</li>
         </ul>
 
 
@@ -45,6 +45,12 @@ const openLogout = () => {
 };
 const authStore = useAuthStore()
 const isOpen = ref(false)
+
+
+const linkTo = (value:string) => {
+    authStore.toggleSidebar(false)
+    return navigateTo(value)
+}
 
 console.log('route', route)
 </script>
