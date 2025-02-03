@@ -1,5 +1,7 @@
 <template>
-    <div class="sidebar">
+    <Drawer v-model:visible="authStore.isSidebarOpen" header="Меню">
+
+    <div class="sidebar mt-2">
         <ul>
             <li :class="{ 'active-link': route.path == '/' }" @click="navigateTo('/')">Главная</li>
             <li :class="{ 'active-link': route.path == '/volunteers' }" @click="navigateTo('/volunteers')">Волонтеры
@@ -18,7 +20,7 @@
 
         </p>
 
-        <Dialog v-model:visible="isLogoutOpen" modal header="Выход" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="isLogoutOpen" modal header="Выход" class="big-dialog">
             <p class="text-center">Вы действительно хотите выйти?</p>
 
             <div class="flex justify-content-center gap-2 align-items-center mt-4">
@@ -28,6 +30,7 @@
 
         </Dialog>
     </div>
+    </Drawer>
 </template>
 
 <script setup lang="ts">
@@ -41,18 +44,19 @@ const openLogout = () => {
     isLogoutOpen.value = true
 };
 const authStore = useAuthStore()
-
+const isOpen = ref(false)
 
 console.log('route', route)
 </script>
 
 <style scoped lang="scss">
+
 .sidebar {
     -webkit-box-shadow: 2px 5px 8px 0px rgba(34, 60, 80, 0.2);
     -moz-box-shadow: 2px 5px 8px 0px rgba(34, 60, 80, 0.2);
     box-shadow: 2px 5px 8px 0px rgba(34, 60, 80, 0.2);
     border-radius: 5px;
-    width: 250px;
+    width: 100%;
     position: fixed;
     padding: 0 7px;
     top: 0;

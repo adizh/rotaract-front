@@ -93,12 +93,12 @@
         <ConfirmDialog></ConfirmDialog>
 
 
-        <Dialog v-model:visible="isUpdateVolunteerOpen" modal header="Обновить волонтера" :style="{ width: '35rem' }">
+        <Dialog v-model:visible="isUpdateVolunteerOpen" modal header="Обновить волонтера" class="big-dialog">
 
             <VolunteersUpdate :currentVolunteer="currentVolunteer" />
         </Dialog>
 
-        <Dialog v-model:visible="isCreateVolunteerOpen" modal header="Создать волонтера" :style="{ width: '35rem' }">
+        <Dialog v-model:visible="isCreateVolunteerOpen" modal header="Создать волонтера" class="big-dialog">
             <VolunteersCreate />
         </Dialog>
     </div>

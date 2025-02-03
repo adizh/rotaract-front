@@ -4,6 +4,12 @@
       <NuxtLayout />
     </div>
     <div class="app-page">
+
+      <div class="mb-2 menu" v-show="route.path !== '/auth'">
+        <Button icon="pi pi-bars" severity="contrast" @click="authStore.toggleSidebar(true)"
+          v-if="!authStore.getSidebarOpen"></Button>
+        <Button icon="pi pi-bars" severity="contrast" v-else></Button>
+      </div>
       <NuxtPage />
     </div>
 
@@ -36,15 +42,16 @@ onMounted(async () => {
 
 .app-layout {
   display: flex;
-
-  gap: 270px;
+padding-left:40px;
   padding-top: 40px;
 
 }
-
+.menu{
+  margin-top: -30px;
+}
 .app-page {
   width: 100%;
-  padding-right:30px;
+  padding-right: 30px;
 
 }
 </style>

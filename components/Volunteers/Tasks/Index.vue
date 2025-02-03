@@ -74,11 +74,11 @@
             <ProgressSpinner />
         </div>
 
-        <Dialog v-model:visible="openCreateTask" modal header="Создать задание" :style="{ width: '35rem' }">
+        <Dialog v-model:visible="openCreateTask" modal header="Создать задание" class="big-dialog">
             <VolunteersTasksCreate />
         </Dialog>
 
-        <Dialog v-model:visible="isUpdateTaskOpen" modal header="Изменить задание" :style="{ width: '35rem' }">
+        <Dialog v-model:visible="isUpdateTaskOpen" modal header="Изменить задание"  class="big-dialog">
             <VolunteersTasksUpdate :currentTask="currentTask" />
         </Dialog>
     </div>

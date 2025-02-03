@@ -3,10 +3,16 @@ import  type {Leader, User} from '@/types/User'
 export const useAuthStore = defineStore("authStore", {
   state: () => ({
     user: {} as User,
-    leader :{} as Leader
+    leader: {} as Leader,
+    isSidebarOpen:false
   }),
   
   actions: {
+    toggleSidebar(value: boolean) {
+      console.log('value',value)
+      this.isSidebarOpen = value
+      console.log('isSidebarOpen',this.isSidebarOpen)
+    },
     logout() {
       localStorage.removeItem("groupId");
       localStorage.removeItem("userId");
@@ -70,6 +76,9 @@ export const useAuthStore = defineStore("authStore", {
      }
   },
   getters: {
+    getSidebarOpen(state) {
+      return state.isSidebarOpen
+    },
     getUserFromStorage(state) {
       if (import.meta.client) {
         let userData = localStorage.getItem("role");

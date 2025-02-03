@@ -214,7 +214,7 @@
             </div>
         </div>
 
-        <Dialog v-model:visible="isCreateMeetingsOpen" modal header="Создать встречу" :style="{ width: '45rem' }">
+        <Dialog v-model:visible="isCreateMeetingsOpen" modal header="Создать встречу" class="big-dialog">
             <MeetingsCreate />
         </Dialog>
     </div>

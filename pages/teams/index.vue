@@ -79,14 +79,14 @@
         </div>
     </div>
 
-    <Dialog v-model:visible="isCreateTeamOpen" modal header="Создать команду" :style="{ width: '35rem' }">
+    <Dialog v-model:visible="isCreateTeamOpen" modal header="Создать команду" class="big-dialog">
         <TeamsCreate />
     </Dialog>
 
 
     <ConfirmDialog></ConfirmDialog>
 
-    <Dialog v-model:visible="openTeamUpdate" modal header="Обновить команду" :style="{ width: '35rem' }">
+    <Dialog v-model:visible="openTeamUpdate" modal header="Обновить команду" class="big-dialog">
         <TeamsUpdate :currentTeam="currentTeam" />
     </Dialog>
 
